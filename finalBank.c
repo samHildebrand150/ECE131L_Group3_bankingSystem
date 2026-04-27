@@ -88,7 +88,7 @@ void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers
         break;
 
         case 5:
-        printf("thank you!\n");
+        printf("Thank you!\n");
         break;
 
         default:
