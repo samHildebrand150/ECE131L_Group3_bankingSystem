@@ -10,6 +10,8 @@ struct account // this creates the structure of an account :)
 //prototypes for functions
 int auth(struct account bankUsers[], int totalUsers);
 void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers, int userIdx);
+void printBalance(double *pBalance);
+void depo(double *pBalance, FILE *pF);
 
 int main()
 {
@@ -32,7 +34,17 @@ int main()
         return 0;
     }
 
-    double *pBalance = &bankUsers[userIdx].balance;
+    double *pBalance = &bankUsers[userIdx].balance
+
+     /*    fopen(filename, mode);
+               MODES 
+        w - Writes to a file 
+        a - Appends new data to a file | adds to a new line at the end of the file
+        r - Reads from a file
+    */
+    FILE *pF;//this creates a file and assigns it to pointer *pF 
+    pF = fopen("Statement.txt","w");// this opens the Statement.txt file and writes the next line into it 
+    fprintf(pF, "-----Welcome to your statement-----\n\n");// fprintf will print to the file instead of the terminal.  
     
     printf("\n\nHello welcome to Gbank\n");
     menu(pBalance, pF, bankUsers, totalUsers, userIdx);//passing the POINTER to menu function 
@@ -83,4 +95,30 @@ void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers
         continue;
         }
     }
+}
+void printBalance(double *pBalance)
+{
+    printf("your balance is: $%.2lf \n",*pBalance); //dereference
+}
+void depo(double *pBalance, FILE *pF)
+{
+    //declare variable and store deposit amount
+    double amount;
+    printf("Enter deposit amount: $");
+    scanf("%lf", &amount);
+
+    //make sure deposit amount is positive
+    if(amount <0){ 
+        printf("\ninvalid amount, please try again\nEnter deposit amount: $");
+        scanf("%lf", &amount);
+    }
+
+    //add deposit amount to balance
+    *pBalance += amount;//dereference
+
+    //send the deposit and new balance to statement.txt file
+    fprintf(pF, "Deposited $%.2lf\n", amount);
+    fprintf(pF, "   Balance: $%.2lf\n", *pBalance);
+    //print success message and new balance to terminal
+    printf("\nDeposit succesful\nNew balance: $%.2lf\n\n",*pBalance);
 }
