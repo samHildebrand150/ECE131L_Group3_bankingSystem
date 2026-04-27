@@ -110,6 +110,39 @@ void printBalance(double *pBalance)
 {
     printf("your balance is: $%.2lf \n",*pBalance); //dereference
 }
+//this function will try to match the account number the user enters to one in the array
+//after finding an account, we ask the user for a pin and see if it matches that specific accounts pin :)
+int auth(struct account bankUsers[], int totalUsers)
+{
+    int tempID, tempPIN, attempts =0;
+
+    printf("hello what is your account number\n");
+    scanf("%d", &tempID);
+    
+    int found = 0;
+    for(int i=0;  i < totalUsers; i++)
+    {
+        if(tempID == bankUsers[i].id)
+        {
+            found = 1;
+            printf("Account found!\nPlease enter PIN:");
+            scanf("%d", &tempPIN);
+
+            while(attempts < 3)
+            {
+                attempts +=1;
+                if(tempPIN == bankUsers[i].pin)
+                {
+                    return i;
+                }
+                printf("Incorrect PIN, please try again \n");
+                scanf("%d", &tempPIN);
+            }
+            return -1;
+        }    
+    }
+    return found ? -1 : -2;
+}
 void depo(double *pBalance, FILE *pF)
 {
     //declare variable and store deposit amount
