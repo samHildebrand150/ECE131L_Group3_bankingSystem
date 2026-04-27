@@ -34,6 +34,11 @@ int main()
         printf("Too many failed attempts goodbye!\n");
         return 0;
     }
+    else if(userIdx == -2)
+    {
+        printf("Account not found\n");
+        return 0;
+    }
 
     double *pBalance = &bankUsers[userIdx].balance
 
