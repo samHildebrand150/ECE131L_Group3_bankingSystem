@@ -9,6 +9,8 @@ struct account // this creates the structure of an account :)
 };
 //prototypes for functions
 int auth(struct account bankUsers[], int totalUsers);
+void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers, int userIdx);
+
 int main()
 {
     //this creates 3 accounts that each have an ID, PIN, Balance.. all in that order
@@ -31,3 +33,54 @@ int main()
     }
 
     double *pBalance = &bankUsers[userIdx].balance;
+    
+    printf("\n\nHello welcome to Gbank\n");
+    menu(pBalance, pF, bankUsers, totalUsers, userIdx);//passing the POINTER to menu function 
+    // when passing a pointer, you wont include the * because you are passing the actual address. When you receive a pointer, you must specify with a 
+    //* because you are saying that you are passing a POINTER
+    // you can use/change the actual value of the pointer by DEREFERENCING by putting a * before the name
+
+    //this function will determine what the user wants to do and then call the next appropriate function 
+void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers, int userIdx)
+{
+    int choice;
+    while(choice !=5){
+    //print options
+    printf("1. Deposit money\n");
+    printf("2. Withdraw money\n");
+    printf("3. Check Balance\n");
+    printf("4. Transfer Money\n");
+    printf("5. Exit\n\n");
+    printf("Enter your choice:");
+    
+    //take and store choice
+    scanf("%d", &choice);
+
+    //call functions 
+    switch(choice){
+        case 1:
+        depo(pBalance,pF);
+        break;
+
+        case 2:
+        with(pBalance,pF);
+        break;
+
+        case 3:
+        printBalance(pBalance);
+        break;
+
+        case 4:
+        transfer(bankUsers, totalUsers, userIdx,pF);
+        break;
+
+        case 5:
+        printf("thank you!\n");
+        break;
+
+        default:
+        printf("invalid choice, try again\n\n");
+        continue;
+        }
+    }
+}
