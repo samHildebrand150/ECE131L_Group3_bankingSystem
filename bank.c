@@ -12,6 +12,7 @@ int auth(struct account bankUsers[], int totalUsers);
 void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers, int userIdx);
 void printBalance(double *pBalance);
 void depo(double *pBalance, FILE *pF);
+void transfer(struct account bankUsers[], int totalUsers, int userIdx, FILE*pf);
 
 int main()
 {
@@ -121,4 +122,40 @@ void depo(double *pBalance, FILE *pF)
     fprintf(pF, "   Balance: $%.2lf\n", *pBalance);
     //print success message and new balance to terminal
     printf("\nDeposit succesful\nNew balance: $%.2lf\n\n",*pBalance);
+}
+void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
+    // ask where the money is going
+    //take money from current users account 
+    // delete from current account and give to new account
+
+    int tempAccount;
+    double tAmount=0.0;
+    printf("\n\n----------TRANSFERING----------\n");
+    printf("Please enter the account number you want to transfer to: ");
+    scanf("%d",&tempAccount);
+
+
+    for(int i=0;  i < totalUsers; i++)
+    {
+        if(tempAccount == bankUsers[i].id)
+        {
+            //find account and collect transfer amount
+            printf("Account %d found!\n", bankUsers[i].id);
+            printf("Please enter the amount you wish to transfer: $");
+            scanf("%lf", &tAmount);
+
+            //transfer logic
+            bankUsers[userIdx].balance -= tAmount;
+            bankUsers[i].balance += tAmount;
+
+            //success message
+            printf("\n-----Transfer complete!-----\n");
+            printf("Your new balance: $%.2lf\n", bankUsers[userIdx].balance);
+            printf("Account %d balance: $%.2lf\n\n", bankUsers[i].id, bankUsers[i].balance);
+
+            //send details to Statement.txt
+            fprintf(pF, "Transfered $%.2lf to account %d\n", tAmount, bankUsers[i].id);
+            fprintf(pF, "   Balance $%.2lf\n",bankUsers[userIdx].balance);
+        }   
+    }
 }
