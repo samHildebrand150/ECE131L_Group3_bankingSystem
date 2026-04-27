@@ -7,22 +7,35 @@ struct account // this creates the structure of an account :)
     int pin;
     double balance;
 };
+
 //prototypes for functions
-int auth(struct account bankUsers[], int totalUsers);
 void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers, int userIdx);
-void printBalance(double *pBalance);
 void depo(double *pBalance, FILE *pF);
 void with(double *pBalance, FILE *pF);
+void printBalance(double *pBalance);
 void transfer(struct account bankUsers[], int totalUsers, int userIdx, FILE*pf);
+int auth(struct account bankUsers[], int totalUsers);
+void printStatement(FILE *pF);
+void saveAccounts(struct account bankUsers[], int totalUsers);
+int loadAccounts(struct account bankUsers[]);
+
 
 int main()
 {
-    //this creates 3 accounts that each have an ID, PIN, Balance.. all in that order
-    struct account bankUsers[3] ={
-        {101, 1234, 100.00},
-        {102, 4321, 200.00},
-        {103, 1111, 300.00}
-    };
+    //this creates 3 accounts that each have an ID, PIN, Balance.. all in that order    
+    struct account bankUsers[3]; 
+
+    //this will load the accounts found in file accounts.dat and if there is no file, it will revert to default values
+    if(loadAccounts(bankUsers) == 0){
+        printf("No save file found. Initializing default accounts...\n");
+        bankUsers[0] = (struct account){101, 1234, 100.00};
+        bankUsers[1] = (struct account){102, 4321, 200.00};
+        bankUsers[2] = (struct account){103, 1111, 300.00};
+    }
+    else
+    {
+        printf("account data loaded succesfully!\n");
+    }
 
     int totalUsers = 3;
    
@@ -32,47 +45,46 @@ int main()
     // this is a safegaurd to end program if user fails to log in
     if(userIdx == -1)
     {
-        printf("Too many failed attempts goodbye!\n");
-        return 0;
-    }
-    else if(userIdx == -2)
-    {
-        printf("Account not found\n");
+        printf("too many failed attempts goodbye!\n");
         return 0;
     }
 
     double *pBalance = &bankUsers[userIdx].balance;
 
-     /*    fopen(filename, mode);
-               MODES 
+    /*    fopen(filename, mode);
+                MODES 
         w - Writes to a file 
         a - Appends new data to a file | adds to a new line at the end of the file
         r - Reads from a file
     */
     FILE *pF;//this creates a file and assigns it to pointer *pF 
-    pF = fopen("Statement.txt","w");// this opens the Statement.txt file and writes the next line into it 
+    pF = fopen("Statement.txt","w+");// this opens the Statement.txt file and writes the next line into it 
     fprintf(pF, "-----Welcome to your statement-----\n\n");// fprintf will print to the file instead of the terminal.  
-    
-    printf("\n\nHello, welcome to Gbank\n");
+
+    printf("\n\nHello welcome to Gbank\n");
     menu(pBalance, pF, bankUsers, totalUsers, userIdx);//passing the POINTER to menu function 
     // when passing a pointer, you wont include the * because you are passing the actual address. When you receive a pointer, you must specify with a 
     //* because you are saying that you are passing a POINTER
     // you can use/change the actual value of the pointer by DEREFERENCING by putting a * before the name
+   
+
+    saveAccounts(bankUsers, totalUsers);
     fclose(pF);
     return 0;
 }
 
-    //this function will determine what the user wants to do and then call the next appropriate function 
+//this function will determine what the user wants to do and then call the next appropriate function 
 void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers, int userIdx)
 {
-    int choice;
-    while(choice !=5){
+    int choice=0;
+    while(choice !=6){
     //print options
     printf("1. Deposit money\n");
     printf("2. Withdraw money\n");
     printf("3. Check Balance\n");
     printf("4. Transfer Money\n");
-    printf("5. Exit\n\n");
+    printf("5. Print Statement\n");
+    printf("6. Exit\n\n");
     printf("Enter your choice:");
     
     //take and store choice
@@ -97,51 +109,18 @@ void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers
         break;
 
         case 5:
-        printf("Thank you!\n");
+        printStatement(pF);
+        break;
+
+        case 6:
+        printf("thank you!\n");
         break;
 
         default:
-        printf("Invalid choice, try again\n\n");
+        printf("invalid choice, try again\n\n");
         continue;
         }
     }
-}
-void printBalance(double *pBalance)
-{
-    printf("your balance is: $%.2lf \n",*pBalance); //dereference
-}
-//this function will try to match the account number the user enters to one in the array
-//after finding an account, we ask the user for a pin and see if it matches that specific accounts pin :)
-int auth(struct account bankUsers[], int totalUsers)
-{
-    int tempID, tempPIN, attempts =0;
-
-    printf("hello what is your account number\n");
-    scanf("%d", &tempID);
-    
-    int found = 0;
-    for(int i=0;  i < totalUsers; i++)
-    {
-        if(tempID == bankUsers[i].id)
-        {
-            found = 1;
-            printf("Account found!\nPlease enter PIN:");
-            scanf("%d", &tempPIN);
-
-            while(attempts < 3)
-            {
-                attempts +=1;
-                if(tempPIN == bankUsers[i].pin)
-                {
-                    return i;
-                }
-                printf("Incorrect PIN, please try again \n");
-                scanf("%d", &tempPIN);
-            }
-            return -1;
-        }    
-    }
-    return found ? -1 : -2;
 }
 void depo(double *pBalance, FILE *pF)
 {
@@ -152,7 +131,7 @@ void depo(double *pBalance, FILE *pF)
 
     //make sure deposit amount is positive
     if(amount <0){ 
-        printf("\nInvalid amount, please try again\nEnter deposit amount: $");
+        printf("\ninvalid amount, please try again\nEnter deposit amount: $");
         scanf("%lf", &amount);
     }
 
@@ -193,6 +172,41 @@ void with(double *pBalance, FILE *pF)
     printf("\nWithdrawal successful\nNew balance $%.2lf \n\n", *pBalance);
 
 }
+void printBalance(double *pBalance)
+{
+    printf("your balance is: $%.2lf \n",*pBalance); //dereference
+}
+
+//this function will try to match the account number the user enters to one in the array
+//after finding an account, we ask the user for a pin and see if it matches that specific accounts pin :)
+int auth(struct account bankUsers[], int totalUsers)
+{
+    int tempID, tempPIN, attempts =0;
+
+    printf("hello what is your account number\n");
+    scanf("%d", &tempID);
+
+    for(int i=0;  i < totalUsers; i++)
+    {
+        if(tempID == bankUsers[i].id)
+        {
+            printf("Account found!\nPlease enter PIN:");
+            scanf("%d", &tempPIN);
+
+            while(attempts < 3)
+            {
+                attempts +=1;
+                if(tempPIN == bankUsers[i].pin)
+                {
+                    return i;
+                }
+                printf("incorrect PIN, please try again \n");
+                scanf("%d", &tempPIN);
+            }
+        }    
+    }
+    return -1;
+}
 void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
     // ask where the money is going
     //take money from current users account 
@@ -203,11 +217,7 @@ void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
     printf("\n\n----------TRANSFERING----------\n");
     printf("Please enter the account number you want to transfer to: ");
     scanf("%d",&tempAccount);
-      // Prevent transferring to the same account
-        if (tempAccount == bankUsers[userIdx].id) {
-                printf("\nIneligible Account: Cannot transfer to the same account.\n");
-                return; // Exit the function early
-        }
+
 
     for(int i=0;  i < totalUsers; i++)
     {
@@ -218,12 +228,6 @@ void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
             printf("Please enter the amount you wish to transfer: $");
             scanf("%lf", &tAmount);
 
-            //make sure transfer amount is less than balance
-            while(tAmount > bankUsers[userIdx].balance){
-                printf("\ninsufficient funds.\nEnter a new transfer amount: $");
-                scanf("%lf", &tAmount);
-            }
-            
             //transfer logic
             bankUsers[userIdx].balance -= tAmount;
             bankUsers[i].balance += tAmount;
@@ -237,5 +241,59 @@ void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
             fprintf(pF, "Transfered $%.2lf to account %d\n", tAmount, bankUsers[i].id);
             fprintf(pF, "   Balance $%.2lf\n",bankUsers[userIdx].balance);
         }   
+    }
+}
+
+void printStatement(FILE *pF)
+{
+    // 1. Flush the buffer to ensure the file on disk is up to date
+    fflush(pF);
+
+    // 2. REWIND: This moves the "cursor" back to the very first character of the file
+    rewind(pF);
+
+    // 3. Read and print until the end of the file
+    char line[100];
+    printf("\n\n-----Your Statement-----\n");
+    while(fgets(line, sizeof(line), pF)){
+        printf("%s", line);
+    }
+    printf("------------------------\n\n");
+
+    // 4. IMPORTANT: Move the cursor back to the end so future 
+    // transactions don't overwrite the beginning of your file!
+    fseek(pF, 0, SEEK_END);
+}
+
+int loadAccounts(struct account bankUsers[]){
+
+    //opens accounts.dat or returns null if accounts.dat doesnt exist
+    FILE *pF = fopen("accounts.dat","rb");
+
+    //if the accounts.dat doesnt exist, we need to revert to original values, so return 0
+    if(pF == NULL)
+    {
+        return 0;
+    }
+    // checks how many bank users are in the accounts.dat file to make sure its not corrupted
+    int count = fread(bankUsers, sizeof(struct account), 3, pF);
+    //closes the accounts.dat file
+    fclose(pF);
+    return count;
+}
+
+void saveAccounts(struct account bankUsers[], int totalUsers)
+{
+    // opens the file or returns NULL if something goes wrong in the memory
+    FILE *pF = fopen("accounts.dat","wb");
+
+    //if the file DOES open, write 
+    if(pF != NULL)
+    {
+        // fwrite will update accounts.dat which updates the balances of the different accounts
+        fwrite(bankUsers, sizeof(struct account), totalUsers, pF);
+        fclose(pF);    
+    }else{
+        printf("error saving account data!\n");
     }
 }
