@@ -12,6 +12,7 @@ int auth(struct account bankUsers[], int totalUsers);
 void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers, int userIdx);
 void printBalance(double *pBalance);
 void depo(double *pBalance, FILE *pF);
+void with(double *pBalance, FILE *pF);
 void transfer(struct account bankUsers[], int totalUsers, int userIdx, FILE*pf);
 
 int main()
@@ -127,6 +128,34 @@ void depo(double *pBalance, FILE *pF)
     fprintf(pF, "   Balance: $%.2lf\n", *pBalance);
     //print success message and new balance to terminal
     printf("\nDeposit succesful\nNew balance: $%.2lf\n\n",*pBalance);
+}
+void with(double *pBalance, FILE *pF)
+{
+    //declare variable and store withdrawal amount
+    double amount;
+    printf("please enter withdrawal amount: $");
+    scanf("%lf", &amount);
+
+    //make sure withdrawal is less than balance
+    while(amount > *pBalance){ 
+        printf("\ninsufficient funds.\nEnter a new withdraw amount: $");
+        scanf("%lf", &amount);
+    }
+
+    //this will check if the withdraw amount is divisible by 20. fmod(numerator,denominator)
+    while(fmod(amount, 20.0) !=0){
+        printf("\nYou can only withdraw in multiples of $20. \nEnter a new withdraw amount: $");
+        scanf("%lf", &amount);
+    }
+    //withdraw money from balance
+    *pBalance -= amount;
+
+    //send the deposit and new balance to Statement.txt file
+    fprintf(pF, "Withdrew $%.2lf\n", amount);
+    fprintf(pF, "   Balance: $%.2lf\n", *pBalance);
+    //print success message and new balance to terminal
+    printf("\nWithdrawal successful\nNew balance $%.2lf \n\n", *pBalance);
+
 }
 void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
     // ask where the money is going
