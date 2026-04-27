@@ -31,7 +31,7 @@ int main()
     // this is a safegaurd to end program if user fails to log in
     if(userIdx == -1)
     {
-        printf("too many failed attempts goodbye!\n");
+        printf("Too many failed attempts goodbye!\n");
         return 0;
     }
 
@@ -47,7 +47,7 @@ int main()
     pF = fopen("Statement.txt","w");// this opens the Statement.txt file and writes the next line into it 
     fprintf(pF, "-----Welcome to your statement-----\n\n");// fprintf will print to the file instead of the terminal.  
     
-    printf("\n\nHello welcome to Gbank\n");
+    printf("\n\nHello, welcome to Gbank\n");
     menu(pBalance, pF, bankUsers, totalUsers, userIdx);//passing the POINTER to menu function 
     // when passing a pointer, you wont include the * because you are passing the actual address. When you receive a pointer, you must specify with a 
     //* because you are saying that you are passing a POINTER
@@ -92,7 +92,7 @@ void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers
         break;
 
         default:
-        printf("invalid choice, try again\n\n");
+        printf("Invalid choice, try again\n\n");
         continue;
         }
     }
@@ -110,7 +110,7 @@ void depo(double *pBalance, FILE *pF)
 
     //make sure deposit amount is positive
     if(amount <0){ 
-        printf("\ninvalid amount, please try again\nEnter deposit amount: $");
+        printf("\nInvalid amount, please try again\nEnter deposit amount: $");
         scanf("%lf", &amount);
     }
 
