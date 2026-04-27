@@ -41,7 +41,7 @@ int main()
         return 0;
     }
 
-    double *pBalance = &bankUsers[userIdx].balance
+    double *pBalance = &bankUsers[userIdx].balance;
 
      /*    fopen(filename, mode);
                MODES 
