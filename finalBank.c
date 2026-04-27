@@ -151,7 +151,7 @@ void depo(double *pBalance, FILE *pF)
     scanf("%lf", &amount);
 
     //make sure deposit amount is positive
-    if(amount <0){ 
+    while(amount <0){ 
         printf("\nInvalid amount, please try again\nEnter deposit amount: $");
         scanf("%lf", &amount);
     }
