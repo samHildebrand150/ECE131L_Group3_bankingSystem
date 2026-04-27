@@ -144,6 +144,12 @@ void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
             printf("Please enter the amount you wish to transfer: $");
             scanf("%lf", &tAmount);
 
+            //make sure transfer amount is less than balance
+            while(tAmount > bankUsers[userIdx].balance){
+                printf("\ninsufficient funds.\nEnter a new transfer amount: $");
+                scanf("%lf", &tAmount);
+            }
+            
             //transfer logic
             bankUsers[userIdx].balance -= tAmount;
             bankUsers[i].balance += tAmount;
