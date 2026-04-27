@@ -172,9 +172,13 @@ void with(double *pBalance, FILE *pF)
     printf("please enter withdrawal amount: $");
     scanf("%lf", &amount);
 
-    //make sure withdrawal is less than balance
+    //make sure withdrawal is less than balance and positive
+    while(amount < 0){
+        printf("\nInvalid amount, please try again\nEnter withdrawal amount: $");
+        scanf("%lf", &amount);
+    }
     while(amount > *pBalance){ 
-        printf("\ninsufficient funds.\nEnter a new withdraw amount: $");
+        printf("\ninsufficient funds.\nEnter a new withdrawal amount: $");
         scanf("%lf", &amount);
     }
 
