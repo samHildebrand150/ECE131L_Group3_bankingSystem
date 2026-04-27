@@ -58,6 +58,9 @@ int main()
     // when passing a pointer, you wont include the * because you are passing the actual address. When you receive a pointer, you must specify with a 
     //* because you are saying that you are passing a POINTER
     // you can use/change the actual value of the pointer by DEREFERENCING by putting a * before the name
+    fclose(pF);
+    return 0;
+}
 
     //this function will determine what the user wants to do and then call the next appropriate function 
 void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers, int userIdx)
