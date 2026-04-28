@@ -187,15 +187,13 @@ int auth(struct account bankUsers[], int totalUsers)
 {
     int tempID, tempPIN, attempts =0;
 
-    printf("hello what is your account number\n");
+    printf("Hello, what is your account number?\n");
     scanf("%d", &tempID);
-    
-    int found = 0;
+
     for(int i=0;  i < totalUsers; i++)
     {
         if(tempID == bankUsers[i].id)
         {
-            found = 1;
             printf("Account found!\nPlease enter PIN:");
             scanf("%d", &tempPIN);
 
@@ -209,10 +207,9 @@ int auth(struct account bankUsers[], int totalUsers)
                 printf("Incorrect PIN, please try again \n");
                 scanf("%d", &tempPIN);
             }
-            return -1;
         }    
     }
-    return found ? -1 : -2;
+    return -1;
 }
 void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
     // ask where the money is going
