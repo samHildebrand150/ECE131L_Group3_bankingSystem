@@ -113,11 +113,11 @@ void menu(double *pBalance, FILE *pF, struct account bankUsers[], int totalUsers
         break;
 
         case 6:
-        printf("thank you!\n");
+        printf("Thank you!\n");
         break;
 
         default:
-        printf("invalid choice, try again\n\n");
+        printf("Invalid choice, try again\n\n");
         continue;
         }
     }
@@ -157,7 +157,7 @@ void with(double *pBalance, FILE *pF)
         scanf("%lf", &amount);
     }
     while(amount > *pBalance){ 
-        printf("\ninsufficient funds.\nEnter a new withdrawal amount: $");
+        printf("\nInsufficient funds.\nEnter a new withdrawal amount: $");
         scanf("%lf", &amount);
     }
 
@@ -178,7 +178,7 @@ void with(double *pBalance, FILE *pF)
 }
 void printBalance(double *pBalance)
 {
-    printf("your balance is: $%.2lf \n",*pBalance); //dereference
+    printf("Your balance is: $%.2lf \n",*pBalance); //dereference
 }
 
 //this function will try to match the account number the user enters to one in the array
@@ -187,7 +187,7 @@ int auth(struct account bankUsers[], int totalUsers)
 {
     int tempID, tempPIN, attempts =0;
 
-    printf("hello what is your account number\n");
+    printf("Hello, what is your account number?\n");
     scanf("%d", &tempID);
     
     int found = 0;
