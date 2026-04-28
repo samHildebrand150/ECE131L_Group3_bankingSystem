@@ -224,6 +224,11 @@ void transfer(struct account bankUsers[], int totalUsers, int userIdx,FILE *pF){
     printf("\n\n----------TRANSFERING----------\n");
     printf("Please enter the account number you want to transfer to: ");
     scanf("%d",&tempAccount);
+          // Prevent transferring to the same account
+    if (tempAccount == bankUsers[userIdx].id) {
+                printf("\nIneligible Account: Cannot transfer to the same account.\n");
+                return; // Exit the function early
+    }
 
 
     for(int i=0;  i < totalUsers; i++)
