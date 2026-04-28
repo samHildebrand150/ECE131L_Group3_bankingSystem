@@ -34,7 +34,7 @@ int main()
     }
     else
     {
-        printf("account data loaded succesfully!\n");
+        printf("Account data loaded succesfully!\n");
     }
 
     int totalUsers = 3;
@@ -42,7 +42,7 @@ int main()
     //this will tell you what user logged in through the auth() function
     int userIdx = auth(bankUsers, totalUsers);
 
-    // this is a safegaurd to end program if user fails to log in
+    // this is a safeguard to end program if user fails to log in
     if(userIdx == -1)
     {
         printf("too many failed attempts goodbye!\n");
@@ -131,7 +131,7 @@ void depo(double *pBalance, FILE *pF)
 
     //make sure deposit amount is positive
     if(amount <0){ 
-        printf("\ninvalid amount, please try again\nEnter deposit amount: $");
+        printf("\nInvalid amount, please try again\nEnter deposit amount: $");
         scanf("%lf", &amount);
     }
 
@@ -148,7 +148,7 @@ void with(double *pBalance, FILE *pF)
 {
     //declare variable and store withdrawal amount
     double amount;
-    printf("please enter withdrawal amount: $");
+    printf("Please enter withdrawal amount: $");
     scanf("%lf", &amount);
 
     //make sure withdrawal is less than balance and positive
@@ -187,7 +187,7 @@ int auth(struct account bankUsers[], int totalUsers)
 {
     int tempID, tempPIN, attempts =0;
 
-    printf("hello what is your account number\n");
+    printf("Hello, what is your account number?\n");
     scanf("%d", &tempID);
 
     for(int i=0;  i < totalUsers; i++)
@@ -204,7 +204,7 @@ int auth(struct account bankUsers[], int totalUsers)
                 {
                     return i;
                 }
-                printf("incorrect PIN, please try again \n");
+                printf("Incorrect PIN, please try again \n");
                 scanf("%d", &tempPIN);
             }
         }    
@@ -298,6 +298,6 @@ void saveAccounts(struct account bankUsers[], int totalUsers)
         fwrite(bankUsers, sizeof(struct account), totalUsers, pF);
         fclose(pF);    
     }else{
-        printf("error saving account data!\n");
+        printf("Error saving account data!\n");
     }
 }
